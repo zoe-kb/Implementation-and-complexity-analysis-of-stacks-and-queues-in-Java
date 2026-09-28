@@ -1,4 +1,4 @@
-// SinglyLinkedListWithTail implementation in Java
+// SinglyLinkedListWithTail en Java
 
 import java.util.NoSuchElementException;
 
@@ -6,7 +6,7 @@ public class SinglyLinkedListWithTail {
 
      private static class Node {
         int data; // Valor almacenado en el nodo
-        Node next; // Refencia al siguiente nodo en la lista
+        Node next; // Refenrencia al siguiente nodo en la lista
         Node(int data) { 
             this.data = data; 
         }
