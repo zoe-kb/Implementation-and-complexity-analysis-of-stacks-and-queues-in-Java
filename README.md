@@ -93,39 +93,6 @@ Las operaciones `find`, `erase`, `addBefore` y `addAfter` incluyen la búsqueda 
 - **Pilas (LIFO):** "Deshacer" (Ctrl + Z) en editores de texto, botón "Atrás" de los navegadores y pila de ejecución del sistema operativo.
 - **Colas (FIFO):** filas de atención, gestión de impresión, reproducción de música y video, y manejo de peticiones o eventos.
 
-## Estructura sugerida del repositorio
-
-> Ajusta los nombres a los de tu proyecto.
-
-```
-.
-├── src/
-│   ├── SinglyLinkedListNoTail.java
-│   ├── SinglyLinkedListWithTail.java
-│   ├── DoublyLinkedListNoTail.java
-│   ├── DoublyLinkedListWithTail.java
-│   ├── MyStack.java
-│   ├── MyQueue.java
-│   └── (clases de benchmark / Main)
-├── informe/
-│   └── Stack-Queue-Java-ED.pdf
-└── README.md
-```
-
-## Cómo compilar y ejecutar
-
-> Ajusta la ruta y el nombre de la clase principal según tu proyecto.
-
-```bash
-# Compilar
-javac -d out src/*.java
-
-# Ejecutar
-java -cp out Main
-```
-
-Requisitos: **JDK 17 o superior** (o la versión que uses en el proyecto).
-
 ## Informe
 
 El análisis completo, con tablas de tiempos y gráficas, está en el informe en PDF incluido en el repositorio (`informe/`).
