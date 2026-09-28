@@ -1,0 +1,101 @@
+interface myQueue<T> {
+    void enqueue(T x);
+    T dequeue();
+    T peek();
+    boolean isEmpty();
+    int size();
+    void delete(T n);
+}
+
+public class ArrayQueue<T> implements MyQueue<T> {
+
+    private T[] data;
+    private int front;
+    private int rear;
+    private int size;
+    private int capacity;
+
+    public ArrayQueue() {
+        capacity = 10;
+        data = (T[]) new Object[capacity];
+        front = 0;
+        rear = 0;
+        size = 0;
+    }
+
+    public void enqueue(T x) {
+        if (size == capacity) {
+            resize();
+        }
+
+        data[rear] = x;
+        rear = (rear + 1) % capacity;
+        size++;
+    }
+
+    public T dequeue() {
+        if (isEmpty()) {
+            return null;
+        }
+
+        T item = data[front];
+        data[front] = null;
+        front = (front + 1) % capacity;
+        size--;
+
+        return item;
+    }
+
+    public T peek() {
+        if (isEmpty()) {
+            return null;
+        }
+
+        return data[front];
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public void delete(T n) {
+        int index = front;
+
+        for (int i = 0; i < size; i++) {
+
+            if (data[index].equals(n)) {
+
+                while (index != rear) {
+                    int next = (index + 1) % capacity;
+                    data[index] = data[next];
+                    index = next;
+                }
+
+                rear = (rear - 1 + capacity) % capacity;
+                data[rear] = null;
+                size--;
+                return;
+            }
+
+            index = (index + 1) % capacity;
+        }
+    }
+
+    private void resize() {
+
+        capacity *= 2;
+        T[] newData = (T[]) new Object[capacity];
+
+        for (int i = 0; i < size; i++) {
+            newData[i] = data[(front + i) % data.length];
+        }
+
+        data = newData;
+        front = 0;
+        rear = size;
+    }
+}

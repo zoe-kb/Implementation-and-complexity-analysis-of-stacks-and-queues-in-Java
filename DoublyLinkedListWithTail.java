@@ -1,0 +1,224 @@
+// Doubly linked list implementation in Java with tail reference
+
+public class DoublyLinkedListWithTail {
+
+    private static class Node {
+        int data; // Valor almacenado en el nodo
+        Node next; // Referencia al siguiente nodo en la lista
+        Node prev; // Referencia al nodo anterior en la lista
+
+        Node(int data) {
+            this.data = data;
+        }
+    }
+
+    private Node head; // Referencia al primer nodo de la lista
+    private Node tail; // Referencia al último nodo de la lista
+    private int size;  // Tamaño de la lista
+
+    // Inserta un nuevo nodo al frente de la lista
+    public void pushFront(int item) {
+        Node newNode = new Node(item);
+        newNode.next = head;
+        newNode.prev = null;
+
+        if (head != null) {
+            head.prev = newNode;
+        } else {
+            tail = newNode;
+        }
+
+        head = newNode;
+        size++;
+    }
+
+    // Inserta un nuevo nodo al final de la lista
+    public void pushBack(int item) {
+        Node newNode = new Node(item);
+        newNode.next = null;
+        newNode.prev = tail;
+
+        if (tail != null) {
+            tail.next = newNode;
+        } else {
+            head = newNode;
+        }
+
+        tail = newNode;
+        size++;
+    }
+
+    // Elimina y devuelve el valor del primer nodo de la lista
+    public int popFront() {
+        if (head == null) {
+            return -1;
+        }
+
+        int item = head.data;
+        head = head.next;
+
+        if (head == null) {
+            tail = null;
+        } else {
+            head.prev = null;
+        }
+
+        size--;
+        return item;
+    }
+
+    // Elimina y devuelve el valor del último nodo de la lista
+    public int popBack() {
+        if (tail == null) {
+            return -1;
+        }
+
+        int item = tail.data;
+        tail = tail.prev;
+
+        if (tail == null) {
+            head = null;
+        } else {
+            tail.next = null;
+        }
+
+        size--;
+        return item;
+    }
+
+    // Busca un nodo con el valor especificado y devuelve una referencia a él
+    public Node find(int item) {
+        Node actual = head;
+        while (actual != null) {
+            if (actual.data == item) {
+                return actual;
+            }
+            actual = actual.next;
+        }
+        return null;
+    }
+
+    // Elimina el primer nodo con el valor especificado y devuelve true si se eliminó, false si no se encontró
+    public boolean erase(int item) {
+        if (head == null) {
+            return false;
+        }
+
+        if (head.data == item) {
+            head = head.next;
+            if (head != null) {
+                head.prev = null;
+            } else {
+                tail = null;
+            }
+            size--;
+            return true;
+        }
+
+        Node actual = head;
+        while (actual != null) {
+            if (actual.data == item) {
+                Node prev = actual.prev;
+                Node next = actual.next;
+
+                if (prev != null) {
+                    prev.next = next;
+                }
+                if (next != null) {
+                    next.prev = prev;
+                } else {
+                    tail = prev;
+                }
+
+                size--;
+                return true;
+            }
+            actual = actual.next;
+        }
+
+        return false;
+    }
+
+    // Agrega un nuevo nodo con el valor newItem antes del primer nodo con el valor target
+    public void addBefore(int target, int newItem) {
+        if (head == null) {
+            return;
+        }
+
+        if (head.data == target) {
+            pushFront(newItem);
+            return;
+        }
+
+        Node actual = head;
+        while (actual != null) {
+            if (actual.data == target) {
+                Node newNode = new Node(newItem);
+                Node prev = actual.prev;
+
+                newNode.prev = prev;
+                newNode.next = actual;
+                actual.prev = newNode;
+
+                if (prev != null) {
+                    prev.next = newNode;
+                }
+
+                size++;
+                return;
+            }
+            actual = actual.next;
+        }
+    }
+
+    // Agrega un nuevo nodo con el valor newItem después del primer nodo con el valor target
+    public void addAfter(int target, int newItem) {
+        Node actual = head;
+        while (actual != null) {
+            if (actual.data == target) {
+                Node newNode = new Node(newItem);
+                Node next = actual.next;
+
+                newNode.prev = actual;
+                newNode.next = next;
+                actual.next = newNode;
+
+                if (next != null) {
+                    next.prev = newNode;
+                } else {
+                    tail = newNode;
+                }
+
+                size++;
+                return;
+            }
+            actual = actual.next;
+        }
+    }
+
+    // Devuelve true si la lista está vacía, false en caso contrario
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    // Devuelve el tamaño de la lista
+    public int size() {
+        return size;
+    }
+
+    // Devuelve el valor del primer nodo de la lista
+    public int front() {
+        if (head == null) {
+            return -1;
+        }
+        return head.data;
+    }
+
+    // Devuelve el valor del último nodo de la lista
+    public int back() {
+        if (tail == null) {
+            return -1;
+        }
+        return tail.data;
+    }
+}
