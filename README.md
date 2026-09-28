@@ -95,7 +95,7 @@ Las operaciones `find`, `erase`, `addBefore` y `addAfter` incluyen la búsqueda 
 
 ## Informe
 
-El análisis completo, con tablas de tiempos y gráficas, está en el informe en PDF incluido en el repositorio (`informe/`).
+El análisis completo, con tablas de tiempos y gráficas, está en el informe en PDF incluido en el repositorio (`Stack-Queue-Java-ED-1096063373.pdf/`).
 
 ## Referencias
 
