@@ -110,7 +110,7 @@ Las tablas completas y las gráficas (escala logarítmica) están en el informe.
 │   ├── DoublyLinkedListWithTail.java
 │   ├── MyStack.java
 │   └── MyQueue.java
-├── informe/            # Informe del proyecto (PDF)
+├── informe/ 
 └── README.md
 
 ## Referencias
