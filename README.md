@@ -1,38 +1,43 @@
-# Implementación y Análisis de Complejidad: List, Stack y Queue en Java
+# Implementación y Análisis de Complejidad: List, Stack y Queue
 
-Proyecto de la asignatura **Estructuras de Datos (2026-2)**, Facultad de Ingeniería, Universidad Nacional de Colombia.
+Proyecto de **Estructuras de Datos (2026-2)**, Facultad de Ingeniería, Universidad Nacional de Colombia.
 
 - **Autora:** Clelia Edithzoe Alzate León
-- **Docente:** David Alberto Herrera Alvarez
-- **Fecha:** 28 de septiembre de 2026
+- **Docente:** David Alberto Herrera Álvarez
+- **Fecha:** 30 de septiembre de 2026
 
-## Objetivo
+## Descripción
 
-Analizar y comparar el comportamiento de las estructuras de datos **List**, **Stack** y **Queue**, implementadas con **listas enlazadas** (`LinkedList`) y **arreglos dinámicos** (`DinamicArray`) en Java. Se busca identificar las condiciones más adecuadas para usar cada una, evaluando ventajas, desventajas y aplicaciones en escenarios reales.
+Este repositorio contiene las implementaciones en **Java** de varias estructuras de datos lineales y el análisis experimental de su complejidad temporal:
 
-## Contenido del proyecto
+- **Listas enlazadas** (`LinkedList`) en cuatro variantes: simple y doble, con y sin referencia al último nodo (`tail`).
+- **`MyStack<T>`**, una pila sobre arreglo dinámico genérico.
+- **`MyQueue<T>`**, una cola sobre arreglo dinámico circular genérico.
 
-### Listas enlazadas (`int`)
+El objetivo es comparar su comportamiento, contrastar la complejidad teórica con los tiempos medidos (en nanosegundos) e identificar en qué escenarios conviene cada estructura. El análisis completo está en el informe del proyecto.
 
-| Implementación | Atributos | Descripción |
+## Estructuras implementadas
+
+| Estructura | Clase | Descripción |
 |---|---|---|
-| `SinglyLinkedListNoTail` | `head`, `size` | Lista simple sin referencia al último nodo |
-| `SinglyLinkedListWithTail` | `head`, `tail`, `size` | Lista simple con referencia al último nodo |
-| `DoublyLinkedListNoTail` | `head`, `size` (+ `prev` en `Node`) | Lista doble sin referencia al último nodo |
-| `DoublyLinkedListWithTail` | `head`, `tail`, `size` (+ `prev` en `Node`) | Lista doble con referencia al último nodo |
+| Lista simple sin tail | `SinglyLinkedListNoTail` | Atributos `head` y `size`. |
+| Lista simple con tail | `SinglyLinkedListWithTail` | Atributos `head`, `tail` y `size`. |
+| Lista doble sin tail | `DoublyLinkedListNoTail` | Nodos con `next` y `prev`; atributos `head` y `size`. |
+| Lista doble con tail | `DoublyLinkedListWithTail` | Nodos con `next` y `prev`; atributos `head`, `tail` y `size`. |
+| Pila | `MyStack<T>` | Arreglo dinámico; duplica la capacidad al llenarse. |
+| Cola | `MyQueue<T>` | Arreglo circular con índices `front` y `rear`; duplica la capacidad al llenarse. |
 
-Métodos: `pushFront`, `pushBack`, `popFront`, `popBack`, `find`, `erase`, `addBefore`, `addAfter`, `front`, `back`, `isEmpty`, `size`.
+### Operaciones
 
-### Estructuras sobre arreglos dinámicos (genéricas `<T>`)
+- **Listas:** `pushFront`, `pushBack`, `popFront`, `popBack`, `front`, `back`, `find`, `erase`, `addBefore`, `addAfter`, `isEmpty`, `size`.
+- **`MyStack<T>`:** `push`, `pop`, `peek`, `isEmpty`, `size`, `delete`.
+- **`MyQueue<T>`:** `enqueue`, `dequeue`, `peek`, `isEmpty`, `size`, `delete`.
 
-- **`MyStack<T>`**: pila (LIFO) sobre arreglo dinámico que duplica su capacidad al llenarse.
-  Métodos: `push`, `pop`, `peek`, `isEmpty`, `size`, `delete`.
-- **`MyQueue<T>`**: cola (FIFO) sobre arreglo circular con redimensionamiento por duplicación.
-  Métodos: `enqueue`, `dequeue`, `peek`, `isEmpty`, `size`, `delete`.
+> **Nota:** las listas almacenan datos de tipo `int`; `MyStack<T>` y `MyQueue<T>` son genéricas. Los métodos que no encuentran elemento (por ejemplo `popFront` o `front` en una lista vacía) retornan `-1`, y los de pila y cola retornan `null`.
 
-## Complejidad temporal
+## Complejidad temporal teórica
 
-Las operaciones `find`, `erase`, `addBefore` y `addAfter` incluyen la búsqueda del valor, por lo que son O(n) en las cuatro listas.
+Las celdas en **negrita** marcan dónde la referencia `tail` cambia el orden de complejidad respecto a la lista sin cola.
 
 | Operación | Simple sin tail | Simple con tail | Doble sin tail | Doble con tail |
 |---|:---:|:---:|:---:|:---:|
@@ -49,54 +54,65 @@ Las operaciones `find`, `erase`, `addBefore` y `addAfter` incluyen la búsqueda 
 | `isEmpty` / `size` | O(1) | O(1) | O(1) | O(1) |
 
 | Estructura | Operaciones principales | `peek`, `size`, `isEmpty` | `delete` |
-|---|---|---|---|
+|---|---|:---:|:---:|
 | `MyStack<T>` | `push`, `pop`: O(1) amortizado | O(1) | O(n) |
 | `MyQueue<T>` | `enqueue`, `dequeue`: O(1) amortizado | O(1) | O(n) |
 
-## Metodología experimental
+**Observaciones:**
 
-- Se midió el tiempo promedio por operación para tamaños **n = 10¹ … 10⁷**.
-- Todos los tiempos se reportan en **nanosegundos**, ya que las operaciones O(1) duran decenas de ns y en milisegundos se redondearían a 0. Esta unidad permite comparar en una misma medición operaciones O(1) y O(n).
-- Las mediciones de `pushBack` y `popBack` con n = 10⁶ y 10⁷ se **omitieron** en las listas donde son O(n), por el tiempo de ejecución (extrapolación: ~15 minutos con 10⁶ y más de un día con 10⁷ para `pushBack` sin tail).
-- Los resultados se graficaron en escala logarítmica.
+- `pushBack` y `back` pasan de O(n) a O(1) con `tail`, tanto en la lista simple como en la doble.
+- `popBack` solo llega a O(1) en la **lista doble con tail**. En la simple con tail sigue siendo O(n), porque hay que recorrer hasta el penúltimo nodo.
+- `find`, `erase`, `addBefore` y `addAfter` son O(n) en las cuatro listas porque buscan por valor. Si ya se dispone del nodo, la inserción o el borrado en sí cuesta O(1), pero localizarlo cuesta O(n).
+- En pila y cola, el redimensionamiento cuesta O(n) pero ocurre solo cuando la capacidad se duplica, de ahí el costo **amortizado** O(1). `delete` es O(n) por la búsqueda y el desplazamiento de elementos.
 
-## Resultados destacados
+## Resultados experimentales
 
-| Comparación (n = 10⁵) | Resultado |
-|---|---|
-| `pushBack` sin tail vs. con tail | ≈ 9,3 ms vs. ≈ 0,47 ms |
-| `popBack` lista simple con tail | ≈ 9,4 ms (sigue siendo O(n)) |
-| `popBack` lista doble con tail | ≈ 0,54 ms (O(1)) |
-| `pushFront`, `popFront`, `push`, `pop`, `enqueue`, `dequeue` | ≈ 3–24 ns, sin depender de n |
+Los tiempos se midieron en **nanosegundos** para tamaños de n = 10¹ hasta 10⁷. Se usa esta unidad porque las operaciones O(1) duran apenas unos nanosegundos y en milisegundos se redondearían a 0, mientras que las O(n) llegan a milisegundos con n grande. Las mediciones de `pushBack` y `popBack` con n ≥ 10⁶ en las listas que deben recorrer hasta el final se **omitieron** por el tiempo que tomarían.
 
-- Insertar y eliminar en los extremos cuesta unos pocos nanosegundos en todas las estructuras (cuando la operación es O(1)).
-- `find`, `erase`, `addBefore` y `addAfter` crecen linealmente: entre 25 y 34 ms por llamada con 10⁷ elementos en las listas.
-- `delete` con 10⁷ elementos: ≈ 12,2 ms en `MyStack` y ≈ 8,5 ms en `MyQueue`, unas 3 veces más rápido que `erase` en las listas.
-- La pila y la cola con arreglo tienen tiempos absolutos menores que las listas en operaciones equivalentes (`push` vs. `pushFront`, `enqueue` vs. `pushBack`) por la ausencia de asignación de nodos y el acceso contiguo a memoria.
+Valores representativos (tiempo promedio por operación, n = 10⁵):
 
-## Conclusiones
+| Operación | Simple sin tail | Simple con tail | Doble sin tail | Doble con tail |
+|---|---:|---:|---:|---:|
+| `pushBack` | 84 887 ns | 3,87 ns | 93 616 ns | 4,35 ns |
+| `popBack` | 98 535 ns | 85 039 ns | 84 814 ns | 4,86 ns |
+| `find` | 143 079 ns | 126 488 ns | 142 996 ns | 136 182 ns |
 
-- **`DoublyLinkedListWithTail`** es la mejor lista: las cuatro operaciones en los extremos son O(1). Es la opción natural para una **deque**.
-- El puntero `tail` mejora `pushBack`, pero en la lista simple **no** resuelve `popBack`, porque hay que llegar al penúltimo nodo.
-- Para **pila** y **cola** de uso general, el arreglo dinámico es una excelente opción por su localidad de caché y menor sobrecarga por elemento. Una lista simple con tail también sirve para la cola.
-- Si se necesita buscar o modificar por valor con frecuencia, ninguna de las implementaciones es conveniente (todas son O(n)).
+Conclusiones principales de las mediciones:
+
+- Las operaciones O(1) se mantienen planas (unos 2–25 ns) al crecer n, lo que coincide con la teoría.
+- `tail` elimina el costo lineal de `pushBack`, pero solo la lista doble con tail resuelve también `popBack` en tiempo constante.
+- `find`, `erase`, `addBefore` y `addAfter` crecen proporcionalmente a n en todas las listas. Entre 10⁶ y 10⁷ el costo por nodo aumenta, hipótesis: la lista deja de caber en caché (no se midieron contadores de hardware).
+- `push`/`pop` en `MyStack` y `enqueue`/`dequeue` en `MyQueue` se mantienen en 3–12 ns sin depender de n.
+- Frente a las listas, pila y cola sobre arreglo obtienen menores tiempos absolutos en operaciones equivalentes gracias al acceso contiguo a memoria y a que no asignan nodos. Con 10⁷ elementos, `delete` toma ≈ 12,2 ms en `MyStack` y ≈ 8,5 ms en `MyQueue`, frente a 25–34 ms de `erase` en las listas.
+
+Las tablas completas y las gráficas (escala logarítmica) están en el informe.
+
+## Cuándo usar cada estructura
+
+- **Pila (LIFO):** lista simple sin tail (solo usa el inicio) o arreglo dinámico. Ejemplos: "Deshacer" (Ctrl + Z), botón "Atrás" del navegador, pila de ejecución del sistema operativo.
+- **Cola (FIFO):** lista simple con tail o arreglo dinámico circular. Ejemplos: gestión de impresión, reproducción de música y video, peticiones o eventos.
+- **Deque (acceso eficiente a ambos extremos):** lista doble con tail.
+- **Búsqueda o modificación por valor frecuente:** ninguna de las opciones es conveniente, todas son O(n).
 
 ### Arreglos dinámicos vs. listas enlazadas
 
 | | Ventajas | Desventajas |
 |---|---|---|
-| **Arreglos dinámicos** | Memoria contigua (mejor uso de caché), menor sobrecarga por elemento, acceso por índice O(1) | Copia O(n) al redimensionar, capacidad sin usar, desplazamientos al insertar o eliminar en medio o al inicio |
-| **Listas enlazadas** | Sin redimensionamiento, costo estable por operación, O(1) en los extremos (con tail o doble enlace), inserción y borrado O(1) si se tiene el nodo | Acceso por posición y búsqueda O(n), un objeto por nodo (más memoria y carga para el recolector de basura), nodos dispersos en memoria |
+| **Arreglo dinámico** | Memoria contigua (mejor uso de caché), menor sobrecarga por elemento, acceso por índice O(1). | Copia O(n) al llenarse y puede quedar capacidad sin usar; insertar o eliminar en el medio o al inicio obliga a desplazar elementos. |
+| **Lista enlazada** | Sin redimensionamiento, costo estable por operación, O(1) en los extremos con `tail` y enlace doble, inserción o borrado O(1) si se tiene el nodo. | Búsqueda y acceso por posición O(n); un objeto por nodo (más memoria y carga para el recolector de basura) y nodos dispersos en memoria. |
 
-## Aplicaciones reales
-
-- **Pilas (LIFO):** "Deshacer" (Ctrl + Z) en editores de texto, botón "Atrás" de los navegadores y pila de ejecución del sistema operativo.
-- **Colas (FIFO):** filas de atención, gestión de impresión, reproducción de música y video, y manejo de peticiones o eventos.
-
-## Informe
-
-El análisis completo, con tablas de tiempos y gráficas, está en el informe en PDF incluido en el repositorio (`Stack-Queue-Java-ED-1096063373.pdf/`).
+## Estructura del repositorio
+.
+├── src/
+│   ├── SinglyLinkedListNoTail.java
+│   ├── SinglyLinkedListWithTail.java
+│   ├── DoublyLinkedListNoTail.java
+│   ├── DoublyLinkedListWithTail.java
+│   ├── MyStack.java
+│   └── MyQueue.java
+├── informe/            # Informe del proyecto (PDF)
+└── README.md
 
 ## Referencias
 
-1. S. Rose, "Big O", 2025. [https://samwho.dev/big-o](https://samwho.dev/big-o)
+1. S. Rose. (2025) *Big O*. Consultado: 28-09-2026. [Online]. Disponible en: https://samwho.dev/big-o
